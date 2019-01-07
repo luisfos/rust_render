@@ -8,10 +8,13 @@ use std::env;
 // for writing to file (why is std::fs::file not enough?)
 use std::io::prelude::*;
 
+// TODO divide functions out of main
+// TODO support other file formats
 
 
 fn main() {
 
+	// TODO allow user to specify output image from cli, with default
     // unwrap retrieves the result of function (as usually it is packaged with an error)
     let p = env::current_dir().unwrap();
     println!("current dir is {}", p.display());
