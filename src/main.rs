@@ -8,6 +8,8 @@ use std::env;
 // for writing to file (why is std::fs::file not enough?)
 use std::io::prelude::*;
 
+use rust_render::math::Vec3;
+
 // TODO divide functions out of main
 // TODO support other file formats
 
@@ -37,12 +39,17 @@ fn main() {
     // iterators are -1 to final. e.g 0..10 = [0,1,...,8,9]
     for j in (0..ny).rev() {
     	for i in (0..nx){
-    		let r: f64 = i as f64 / nx as f64;
-    		let g: f64 = j as f64 / ny as f64;    		
-    		let b: f64 = 0.2;
-    		let ir = (255.99*r).round();
-    		let ig = (255.99*g).round();
-    		let ib = (255.99*b).round();
+            let col: Vec3 = Vec3::new(
+                i as f64 / nx as f64,
+                j as f64 / ny as f64,
+                0.2
+            );
+    		// let r: f64 = i as f64 / nx as f64;
+    		// let g: f64 = j as f64 / ny as f64;    		
+    		// let b: f64 = 0.2;
+    		let ir = (255.99*col.x).round();
+    		let ig = (255.99*col.y).round();
+    		let ib = (255.99*col.z).round();
     		image.push_str(&format!("{} {} {}\n", ir,ig,ib));
     	}
     }
