@@ -8,6 +8,7 @@ use std::ops::{Mul,Div,Add,Sub};
 
 // allows println to show struct - https://doc.rust-lang.org/book/ch05-02-example-structs.html
 #[derive(Debug)]
+#[derive(Copy, Clone)]
 pub struct Vec3{
 	pub x: f64,
 	pub y: f64,
@@ -17,11 +18,23 @@ pub struct Vec3{
 impl Mul<f64> for Vec3 {
 	type Output = Vec3;
 
+	// maybe should be references to prevent copying?:
+	// fn mul(&self, other: &f64)
 	fn mul(self, other: f64) -> Vec3 {
 		Vec3 { 
 			x: self.x * other,
 			y: self.y * other,
 			z: self.z * other,
+		}
+	}
+}
+impl Mul<Vec3> for f64 {
+	type Output = Vec3;
+	fn mul(self, other: Vec3) -> Vec3 {
+		Vec3 { 
+			x: other.x * self,
+			y: other.y * self,
+			z: other.z * self,
 		}
 	}
 }
@@ -83,11 +96,15 @@ impl Vec3 {
 		val.sqrt()
 	}
 	
-	//we need to read and write - mutable reference borrow
-	pub fn normalize(&mut self) -> () {		
-		let length = self.length();
-		self.x /= length;
-		self.y /= length;
-		self.z /= length;		
+	pub fn normalized(self) -> Vec3 {
+		//Vec3::new(self.x, self.y, self.z) / self.length()
+		self / self.length()
 	}
+	//we need to read and write - mutable reference borrow
+	// pub fn normalize(&mut self) -> () {		
+	// 	let length = self.length();
+	// 	self.x /= length;
+	// 	self.y /= length;
+	// 	self.z /= length;		
+	// }
 }
