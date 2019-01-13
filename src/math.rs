@@ -1,11 +1,10 @@
 /* TODO
 setup external file for testing - examples? multiple targets? why is this so complex
 see if &self can be named anything else - is it like python classes?
-see if "&mut self" is equivalent of mutable &self and correct syntax
 
 */
 
-use std::ops::{Mul,Div};
+use std::ops::{Mul,Div,Add,Sub};
 
 // allows println to show struct - https://doc.rust-lang.org/book/ch05-02-example-structs.html
 #[derive(Debug)]
@@ -27,6 +26,7 @@ impl Mul<f64> for Vec3 {
 	}
 }
 
+
 impl Div<f64> for Vec3 {
 	type Output = Vec3;
 
@@ -35,6 +35,30 @@ impl Div<f64> for Vec3 {
 			x: self.x / other,
 			y: self.y / other,
 			z: self.z / other,
+		}
+	}
+}
+
+impl Add<Vec3> for Vec3 {
+	type Output = Vec3;
+
+	fn add(self, other: Vec3) -> Vec3 {
+		Vec3 { 
+			x: self.x + other.x,
+			y: self.y + other.y,
+			z: self.z + other.z,
+		}
+	}
+}
+
+impl Sub<Vec3> for Vec3 {
+	type Output = Vec3;
+
+	fn sub(self, other: Vec3) -> Vec3 {
+		Vec3 { 
+			x: self.x - other.x,
+			y: self.y - other.y,
+			z: self.z - other.z,
 		}
 	}
 }
@@ -67,7 +91,3 @@ impl Vec3 {
 		self.z /= length;		
 	}
 }
-
-// impl ops::Add for Vec3 {
-// 	type Output
-// }

@@ -17,6 +17,9 @@ fn main() {
 	
 	v = v * 5.0;
 	println!("multiplied by 5, now: {:?}", v);
+
+	v = v + Vec3::new(1.0, 1.0, 1.0);
+	println!("added (1,1,1), now: {:?}", v);
 	
 	v = v / 3.0;
 	println!("divided by 3, now: {:?}", v);

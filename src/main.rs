@@ -8,9 +8,10 @@ use std::env;
 // for writing to file (why is std::fs::file not enough?)
 use std::io::prelude::*;
 
+// why do we need to use 'rust_render', why not 'crate'?
 use rust_render::math::Vec3;
 
-// TODO divide functions out of main
+// TODO divide image generation functions out of main
 // TODO support other file formats
 
 
