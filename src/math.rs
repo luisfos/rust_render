@@ -96,6 +96,10 @@ impl Vec3 {
 		val.sqrt()
 	}
 	
+	pub fn dot(&self, other: &Vec3) -> f64 {
+		self.x*other.x + self.y*other.y + self.z*other.z
+	}
+	
 	pub fn normalized(self) -> Vec3 {
 		//Vec3::new(self.x, self.y, self.z) / self.length()
 		self / self.length()

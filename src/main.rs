@@ -19,7 +19,19 @@ use crate::general::Ray;
 
 // TODO divide image generation functions out of main
 // TODO support other file formats
-fn color(r: Ray) -> Vec3 {
+fn hit_sphere(center: &Vec3, radius: f64, r: &Ray) -> bool {
+    let oc: Vec3 = r.origin - *center;
+    let a: f64 = r.direction.dot(&r.direction);
+    let b: f64 = 2.0 * oc.dot(&r.direction);
+    let c: f64 = oc.dot(&oc) - radius*radius;
+    let discriminant: f64 = b*b - 4.0*a*c;
+    discriminant > 0.0
+}
+
+fn color(r: &Ray) -> Vec3 {
+    if hit_sphere( &Vec3::new(0.0,0.0,-1.0), 0.5, r) {
+        return Vec3::new(1.0, 0.0, 0.0);
+    }
     let unit_dir: Vec3 = r.direction.normalized();
     let t: f64 = 0.5*(unit_dir.y + 1.0);    
     (1.0-t)*Vec3::new(1.0,1.0,1.0) + t*Vec3::new(0.5,0.7,1.0)
@@ -65,7 +77,7 @@ fn main() {
             let v: f64 = j as f64 / ny as f64;
             let r: Ray = Ray::new(origin, bl_corner + u*horizontal + v*vertical);
 
-            let col: Vec3 = color(r);
+            let col: Vec3 = color(&r);
 
     		// let r: f64 = i as f64 / nx as f64;
     		// let g: f64 = j as f64 / ny as f64;    		
