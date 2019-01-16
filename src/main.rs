@@ -29,8 +29,9 @@ fn hit_sphere(center: &Vec3, radius: f64, r: &Ray) -> bool {
 }
 
 fn color(r: &Ray) -> Vec3 {
+    //return Vec3::new(0.3,0.2,0.9);
     if hit_sphere( &Vec3::new(0.0,0.0,-1.0), 0.5, r) {
-        return Vec3::new(1.0, 0.0, 0.0);
+        return Vec3::new(1.0, 0.0, 0.0);        
     }
     let unit_dir: Vec3 = r.direction.normalized();
     let t: f64 = 0.5*(unit_dir.y + 1.0);    
@@ -77,14 +78,11 @@ fn main() {
             let v: f64 = j as f64 / ny as f64;
             let r: Ray = Ray::new(origin, bl_corner + u*horizontal + v*vertical);
 
-            let col: Vec3 = color(&r);
-
-    		// let r: f64 = i as f64 / nx as f64;
-    		// let g: f64 = j as f64 / ny as f64;    		
-    		// let b: f64 = 0.2;
-    		let ir = (255.99*col.x).round();
-    		let ig = (255.99*col.y).round();
-    		let ib = (255.99*col.z).round();
+            let col: Vec3 = color(&r);                		
+            
+    		let ir = (255.99*col.x).floor();
+    		let ig = (255.99*col.y).floor();
+    		let ib = (255.99*col.z).floor();
     		image.push_str(&format!("{} {} {}\n", ir,ig,ib));
     	}
     }

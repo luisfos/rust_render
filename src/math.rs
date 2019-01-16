@@ -112,3 +112,70 @@ impl Vec3 {
 	// 	self.z /= length;		
 	// }
 }
+
+
+#[cfg(test)]
+mod tests{
+	use super::*;
+
+	#[test]
+	fn test_add(){
+		let v: Vec3 = Vec3::new(1.0, 2.0, 3.0);
+		let result: Vec3 = v + Vec3::new(0.1,0.2,0.3);
+		assert!(result.x == 1.1);
+		assert!(result.y == 2.2);
+		assert!(result.z == 3.3);
+	}	
+
+	#[test]
+	fn test_sub(){
+		let v: Vec3 = Vec3::new(1.0, 2.0, 3.0);
+		let result: Vec3 = v - Vec3::new(0.1,0.2,0.3);
+		assert!(result.x == 0.9);
+		assert!(result.y == 1.8);
+		assert!(result.z == 2.7);
+	}
+
+	#[test]
+	fn test_mul(){
+		let v: Vec3 = Vec3::new(1.0, 2.0, 3.0);
+		let s: f64 = 3.0;
+		let left: Vec3 = v * s;
+		let right: Vec3 = s * v;
+		// check side equality
+		assert!(left.x == right.x);
+		assert!(left.y == right.y);
+		assert!(left.z == right.z);
+
+		assert!(left.x == 3.0); 
+		assert!(left.y == 6.0); 
+		assert!(left.z == 9.0); 		
+	}
+
+	#[test]
+	fn test_difficult(){
+		let t: f64 = 0.5;
+		let o: Vec3 = (1.0-t)*Vec3::new(1.0,1.0,1.0) + t*Vec3::new(0.5,0.7,1.0);
+		assert!(o.x == 0.75);//0.5+0.5*0.5);
+		assert!(o.y == 0.85);//0.5+0.5*0.7);
+		assert!(o.z == 1.0);//0.5+0.5*1.0);
+	}
+
+	#[test]
+	fn test_length(){
+		let vector: Vec3 = Vec3::new(1.0, 4.0, 8.0);
+		let length = vector.length();
+		assert!(length == 9.0);	
+	}
+
+	#[test]
+	fn test_normalize(){
+		let vector: Vec3 = Vec3::new(3.0, 0.0, 4.0);
+		let n: Vec3 = vector.normalized();
+		assert!(n.x == 3.0/5.0);	
+		assert!(n.y == 0.0);	
+		assert!(n.z == 4.0/5.0);	
+		assert!(n.length() == 1.0);	
+	}		
+	
+}

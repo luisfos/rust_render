@@ -1,5 +1,5 @@
 /target
 **/*.rs.bk
-examples/_*
+/examples*
 .vscode*
 image.ppm
