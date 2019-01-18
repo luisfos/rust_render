@@ -15,7 +15,7 @@ mod general;
 // specifying crate name specifically (rust_render) will use the definition of `lib.rs`, which is only meant for external use (examples)
 // instead we import the modules using 'mod' and then dictate the namespaces using 'use'
 use crate::math::Vec3;
-use crate::general::{Ray, Sphere};
+use crate::general::*;
 
 // allow us to describe our array of shapes as a common object, match out afterwards
 enum Primitives {
@@ -40,7 +40,7 @@ fn hit_sphere(center: &Vec3, radius: f64, r: &Ray) -> f64 {
     }    
 }
 
-fn color(r: &Ray, shapes: &Vec<&Primitives>) -> Vec3 {
+fn color(r: &Ray, shapes: Vec<Hitable>) -> Vec3 {
     //return Vec3::new(0.3,0.2,0.9);
     let spherePos: Vec3 = Vec3::new(0.0, 0.0, -1.0);
     let mut t: f64 = hit_sphere( &spherePos, 0.5, r);
@@ -80,15 +80,15 @@ fn main() {
     // TODO find proper method of passing heterogenous collection (world of shapes)
     // understand enums - might be solution, very long
     // shape creation
-    let s1: Sphere = Sphere{pos: Vec3::new(0.0,0.0,-1.0), rad: 0.5};
-    let s2: Sphere = Sphere{pos: Vec3::new(0.0,-100.5,-1.0), rad: 100.0};
-    let ps1 = Primitives::Sphere(s1);
-    let ps2 = Primitives::Sphere(s2);
+    let s1 = Sphere{pos: Vec3::new(0.0,0.0,-1.0), rad: 0.5};
+    let s2 = Sphere{pos: Vec3::new(0.0,-100.5,-1.0), rad: 100.0};
+    // let ps1 = Primitives::Sphere(s1);
+    // let ps2 = Primitives::Sphere(s2);
     //println!("s1 origin is {}", ps1 s1.rad );
-    if let Primitives::Sphere(my_sphere) = ps1{
-        println!("primitive s1 rad is {}", my_sphere.rad );
-    }
-    let shapes = vec!{&ps1, &ps2};
+    // if let Primitives::Sphere(my_sphere) = ps1{
+    //     println!("primitive s1 rad is {}", my_sphere.rad );
+    // }
+    let shapes: Vec<Hitable> = vec![s1, s2];
     // let shapes = [&s1, &s2];
     let empty: Vec<f64> = Vec::new();
     println!{"shapes vec occupies {} bytes", mem::size_of_val( &shapes ) }

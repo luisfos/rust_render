@@ -34,7 +34,7 @@ pub struct HitRecord {
 	pub normal: Vec3,
 }
 
-trait Hitable {
+pub trait Hitable {
 	fn hit(&self, r: &Ray, t_min: f64, t_max: f64, rec: &mut HitRecord) -> bool;
 }
 
