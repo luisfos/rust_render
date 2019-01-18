@@ -1,13 +1,13 @@
 use std::error::Error;
-use std::path::Path;
 use std::fs::File;
+// use std::path::Path;
 
+// for checking used memory
+use std::mem;
 // for creating image relative to exe path
 use std::env;
-
 // for writing to file (why is std::fs::file not enough?)
 use std::io::prelude::*;
-
 
 mod math;
 mod general;
@@ -15,7 +15,13 @@ mod general;
 // specifying crate name specifically (rust_render) will use the definition of `lib.rs`, which is only meant for external use (examples)
 // instead we import the modules using 'mod' and then dictate the namespaces using 'use'
 use crate::math::Vec3;
-use crate::general::Ray;
+use crate::general::{Ray, Sphere};
+
+// allow us to describe our array of shapes as a common object, match out afterwards
+enum Primitives {
+    Sphere(Sphere),
+    //Plane(Plane),
+}
 
 // TODO divide image generation functions out of main
 // TODO support other file formats
@@ -34,7 +40,7 @@ fn hit_sphere(center: &Vec3, radius: f64, r: &Ray) -> f64 {
     }    
 }
 
-fn color(r: &Ray) -> Vec3 {
+fn color(r: &Ray, shapes: &Vec<&Primitives>) -> Vec3 {
     //return Vec3::new(0.3,0.2,0.9);
     let spherePos: Vec3 = Vec3::new(0.0, 0.0, -1.0);
     let mut t: f64 = hit_sphere( &spherePos, 0.5, r);
@@ -70,6 +76,22 @@ fn main() {
 
     // initial data for image format ppm
     image.push_str(&format!("P3\n{} {}\n255\n", nx, ny));
+
+    // TODO find proper method of passing heterogenous collection (world of shapes)
+    // understand enums - might be solution, very long
+    // shape creation
+    let s1: Sphere = Sphere{pos: Vec3::new(0.0,0.0,-1.0), rad: 0.5};
+    let s2: Sphere = Sphere{pos: Vec3::new(0.0,-100.5,-1.0), rad: 100.0};
+    let ps1 = Primitives::Sphere(s1);
+    let ps2 = Primitives::Sphere(s2);
+    //println!("s1 origin is {}", ps1 s1.rad );
+    if let Primitives::Sphere(my_sphere) = ps1{
+        println!("primitive s1 rad is {}", my_sphere.rad );
+    }
+    let shapes = vec!{&ps1, &ps2};
+    // let shapes = [&s1, &s2];
+    let empty: Vec<f64> = Vec::new();
+    println!{"shapes vec occupies {} bytes", mem::size_of_val( &shapes ) }
     
     // image boundaries
     let bl_corner: Vec3 = Vec3::new(-2.0, -1.0, -1.0);
@@ -89,7 +111,7 @@ fn main() {
             let v: f64 = j as f64 / ny as f64;
             let r: Ray = Ray::new(origin, bl_corner + u*horizontal + v*vertical);
 
-            let col: Vec3 = color(&r);                		
+            let col: Vec3 = color(&r, &shapes);                		
             
     		let ir = (255.99*col.x).floor();
     		let ig = (255.99*col.y).floor();
