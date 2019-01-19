@@ -1,8 +1,8 @@
 use crate::math::Vec3;
 
-pub struct Scene{
-	
-}
+// pub struct Scene{
+// 	pub shapes: Vec<Box<dyn Hitable>>;
+// }
 
 
 #[derive(Debug)]
@@ -32,6 +32,11 @@ pub struct HitRecord {
 	pub t: f64,
 	pub p: Vec3,
 	pub normal: Vec3,
+}
+impl HitRecord{
+	pub fn default() -> HitRecord{
+		HitRecord{t: 0.0, p: Vec3::new(0.0,0.0,0.0), normal: Vec3::new(0.0,0.0,0.0) }
+	}
 }
 
 pub trait Hitable {
