@@ -95,6 +95,10 @@ impl Vec3 {
 		let val = self.x*self.x + self.y*self.y + self.z*self.z;
 		val.sqrt()
 	}
+
+	pub fn length2(&self) -> f64 {
+		self.x*self.x + self.y*self.y + self.z*self.z		
+	}	
 	
 	pub fn dot(&self, other: &Vec3) -> f64 {
 		self.x*other.x + self.y*other.y + self.z*other.z

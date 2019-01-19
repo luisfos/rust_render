@@ -16,15 +16,32 @@ mod general;
 // instead we import the modules using 'mod' and then dictate the namespaces using 'use'
 use crate::math::Vec3;
 use crate::general::*;
-
-
+use rand::random;
 // TODO divide image generation functions out of main
 // TODO support other file formats
 
-fn color(r: &Ray, shapes: &Vec<Box<dyn Hitable>> ) -> Vec3 {    
+const MAX_BOUNCES: u8 = 8;
+
+fn random_point_in_sphere() -> Vec3{
+    let mut v: Vec3 = Vec3::zero();
+    loop{
+        v = 2.0*Vec3::new(random(),random(),random()) - Vec3::new(1.0,1.0,1.0);
+        if v.length2() <= 1.0 {
+            break;
+        }
+    }
+    v
+}
+
+
+fn color(r: &Ray, shapes: &Vec<Box<dyn Hitable>>, doGI: bool ) -> Vec3 {    
     let mut rec: HitRecord = HitRecord::default();
     for shape in shapes.iter(){
-        if shape.hit(r, 0.0, 1000.0, &mut rec){ // if collide
+        if shape.hit(r, 0.0, 10000.0, &mut rec){ // if collide
+            let target: Vec3 = rec.p + rec.normal + random_point_in_sphere();
+            if doGI{
+                return 0.5*color(&Ray::new(rec.p, target-rec.p), shapes, false);
+            }
             return 0.5*Vec3::new(rec.normal.x+1.0, rec.normal.y+1.0, rec.normal.z+1.0);
         }        
     }   
@@ -103,7 +120,7 @@ fn main() {
                 let v: f64 = (j as f64 + offset_y) / ny as f64;
                 let r: Ray = Ray::new(origin, bl_corner + u*horizontal + v*vertical);
 
-                col = col + color(&r, &shapes);                		
+                col = col + color(&r, &shapes, true);                		
             }
             col = col / (ns*ns) as f64;
             // let col: Vec3 = Vec3::new(
