@@ -55,6 +55,9 @@ fn main() {
     let mut image = String::new();
     let nx = 200;
     let ny = 100;
+    
+    // aa samples (this is squared)
+    let ns = 4;
 
     // initial data for image format ppm
     image.push_str(&format!("P3\n{} {}\n255\n", nx, ny));
@@ -88,16 +91,27 @@ fn main() {
     // iterators are -1 to final. e.g 0..10 = [0,1,...,8,9]
     for j in (0..ny).rev() {
     	for i in 0..nx {
+            let mut col: Vec3 = Vec3::zero();
+            for s in 0..(ns*ns) {
+                
+                // even distribution grid offset per pixel
+                let d: f64 = 1.0 / ns as f64;
+                let offset_x: f64 = (s % ns) as f64 * d + (0.5*d);
+                let offset_y: f64 = (s / ns) as f64 * d + (0.5*d);
+
+                let u: f64 = (i as f64 + offset_x) / nx as f64;
+                let v: f64 = (j as f64 + offset_y) / ny as f64;
+                let r: Ray = Ray::new(origin, bl_corner + u*horizontal + v*vertical);
+
+                col = col + color(&r, &shapes);                		
+            }
+            col = col / (ns*ns) as f64;
             // let col: Vec3 = Vec3::new(
             //     i as f64 / nx as f64,
             //     j as f64 / ny as f64,
             //     0.2
             // );
-            let u: f64 = i as f64 / nx as f64;
-            let v: f64 = j as f64 / ny as f64;
-            let r: Ray = Ray::new(origin, bl_corner + u*horizontal + v*vertical);
-
-            let col: Vec3 = color(&r, &shapes);                		
+           
             
     		let ir = (255.99*col.x).floor();
     		let ig = (255.99*col.y).floor();
