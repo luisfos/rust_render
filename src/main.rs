@@ -80,11 +80,12 @@ fn main() {
     // TODO find proper method of passing heterogenous collection (world of shapes)
     // understand enums - might be solution, very long
     // shape creation
-    let mut shapes: Vec<Box<dyn Hitable>> = Vec::new();
+    // let mut shapes: Vec<Box<dyn Hitable>> = Vec::new();
     let sphere1 = Sphere{pos: Vec3::new(0.0,0.0,-1.0), rad: 0.5};
     let sphere2 = Sphere{pos: Vec3::new(0.0,-100.5,-1.0), rad: 100.0};
-    shapes.push(Box::new(sphere1));
-    shapes.push(Box::new(sphere2));
+    // shapes.push(Box::new(sphere1));
+    // shapes.push(Box::new(sphere2));
+    let shapes: Vec<Box<dyn Hitable>> = vec!{Box::new(sphere1), Box::new(sphere2)};
     
     //let shapes: Vec<Hitable> = vec![s1, s2];
 
