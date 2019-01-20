@@ -34,15 +34,15 @@ fn random_point_in_sphere() -> Vec3{
 }
 
 
-fn color(r: &Ray, shapes: &Vec<Box<dyn Hitable>>, doGI: bool ) -> Vec3 {    
+fn color(r: &Ray, shapes: &Vec<Box<dyn Hitable>>) -> Vec3 {    
     let mut rec: HitRecord = HitRecord::default();
     for shape in shapes.iter(){
         if shape.hit(r, 0.0, 10000.0, &mut rec){ // if collide
-            let target: Vec3 = rec.p + rec.normal + random_point_in_sphere();
-            if doGI{
-                return 0.5*color(&Ray::new(rec.p, target-rec.p), shapes, false);
-            }
-            return 0.5*Vec3::new(rec.normal.x+1.0, rec.normal.y+1.0, rec.normal.z+1.0);
+            let target: Vec3 = rec.p + rec.normal + random_point_in_sphere();            
+            // gi return
+            return 0.5*color(&Ray::new(rec.p, target-rec.p), shapes);            
+            // normal vis return
+            //return 0.5*Vec3::new(rec.normal.x+1.0, rec.normal.y+1.0, rec.normal.z+1.0);
         }        
     }   
 
@@ -74,7 +74,7 @@ fn main() {
     let ny = 100;
     
     // aa samples (this is squared)
-    let ns = 4;
+    let ns = 8;
 
     // initial data for image format ppm
     image.push_str(&format!("P3\n{} {}\n255\n", nx, ny));
@@ -120,7 +120,7 @@ fn main() {
                 let v: f64 = (j as f64 + offset_y) / ny as f64;
                 let r: Ray = Ray::new(origin, bl_corner + u*horizontal + v*vertical);
 
-                col = col + color(&r, &shapes, true);                		
+                col = col + color(&r, &shapes);                		
             }
             col = col / (ns*ns) as f64;
             // let col: Vec3 = Vec3::new(
