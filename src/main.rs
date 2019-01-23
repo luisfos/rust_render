@@ -7,20 +7,22 @@ use std::mem;
 // for creating image relative to exe path
 use std::env;
 // for writing to file (why is std::fs::file not enough?)
-use std::io::prelude::*;
+use std::io::prelude::Write;
+use rand::random;
 
 mod math;
 mod general;
+mod camera;
 // why do we need to use 'rust_render', why not 'crate'?
 // specifying crate name specifically (rust_render) will use the definition of `lib.rs`, which is only meant for external use (examples)
 // instead we import the modules using 'mod' and then dictate the namespaces using 'use'
 use crate::math::Vec3;
-use crate::general::*;
-use rand::random;
+use crate::general::{HitRecord, Hitable, Ray, Sphere};
+use crate::camera::Camera;
+
 // TODO divide image generation functions out of main
 // TODO support other file formats
 
-const MAX_BOUNCES: u8 = 8;
 
 fn random_point_in_sphere() -> Vec3{
     let mut v: Vec3 = Vec3::zero();
@@ -96,9 +98,10 @@ fn main() {
 
     // let shapes = vec![s1, s2];
     //let shapes = [s1, s2];
-    let empty: Vec<f64> = Vec::new();
-    println!{"shapes vec occupies {} bytes", mem::size_of_val( &shapes ) }
+    // let empty: Vec<f64> = Vec::new();
+    // println!{"shapes vec occupies {} bytes", mem::size_of_val( &shapes ) }
     
+    let cam: Camera = Camera::default();
     // image boundaries
     let bl_corner: Vec3 = Vec3::new(-2.0, -1.0, -1.0);
     let horizontal: Vec3 = Vec3::new(4.0, 0.0, 0.0);
@@ -118,7 +121,8 @@ fn main() {
 
                 let u: f64 = (i as f64 + offset_x) / nx as f64;
                 let v: f64 = (j as f64 + offset_y) / ny as f64;
-                let r: Ray = Ray::new(origin, bl_corner + u*horizontal + v*vertical);
+                //let r: Ray = Ray::new(origin, bl_corner + u*horizontal + v*vertical);
+                let r: Ray = cam.get_ray(u,v);
 
                 col = col + color(&r, &shapes);                		
             }
